@@ -4,10 +4,20 @@ from question_service import get_questions_for_test
 from results_service import generate_feedback, get_test_review
 from subjects_service import get_all_subjects, get_subtopics_for_subject
 from test_service import start_test, record_answer, decide_next_step
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends
 from auth_service import get_current_user
-app = FastAPI()
 from test_service import get_mastery_summary
+
+app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # allows any frontend to call this — fine for development
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/user/mastery")
 def api_get_mastery(subtopic_id: int,user_id: str = Depends(get_current_user)):
